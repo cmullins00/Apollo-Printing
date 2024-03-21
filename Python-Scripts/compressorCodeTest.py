@@ -27,14 +27,18 @@ print(f"Listening on {host}:{port}")
 
 conn, addr = sock.accept()
 print(f"Connected with {addr[0]}:{addr[1]}")
+run = True
+while(run == True)
+	msg = conn.recv(4).decode("utf-8")
 
-msg = conn.recv(4).decode("utf-8")
+	if msg == "ON":
+		gpio.output(forward_pin, gpio.HIGH)
+		print("Turned compressor on")
+	elif msg == "OFF"
+		gpio.output(forward_pin, gpio.LOW)
+		print("Turned compressor off")
+	elif msg == "END"
+		run = False
 
-if msg == ":)":
-	gpio.output(forward_pin, gpio.HIGH)
-	sleep(5.0)
-	gpio.output(forward_pin, gpio.LOW)
-
-print(f"[{addr}] {msg}")
 
 gpio.cleanup()
