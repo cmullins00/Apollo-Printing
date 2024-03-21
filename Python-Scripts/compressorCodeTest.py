@@ -1,6 +1,6 @@
 import socket
 import sys
-import RPi.GPIO
+import RPi.GPIO as GPIO
 from time import sleep
 
 host = ""
@@ -9,9 +9,9 @@ host_addr = (host, port)
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-gpio.setmode(gpio.BOARD)
+GPIO.setmode(GPIO.BOARD)
 forward_pin = 10
-gpio.setup(forward_pin, gpio.OUT)
+GPIO.setup(forward_pin, GPIO.OUT)
 
 try:
 	sock.bind(host_addr)
@@ -28,17 +28,17 @@ print(f"Listening on {host}:{port}")
 conn, addr = sock.accept()
 print(f"Connected with {addr[0]}:{addr[1]}")
 run = True
-while(run == True)
+while(run == True):
 	msg = conn.recv(4).decode("utf-8")
 
 	if msg == "ON":
-		gpio.output(forward_pin, gpio.HIGH)
+		GPIO.output(forward_pin, GPIO.HIGH)
 		print("Turned compressor on")
-	elif msg == "OFF"
-		gpio.output(forward_pin, gpio.LOW)
+	elif msg == "OFF":
+		GPIO.output(forward_pin, GPIO.LOW)
 		print("Turned compressor off")
-	elif msg == "END"
+	elif msg == "END":
 		run = False
 
 
-gpio.cleanup()
+GPIO.cleanup()
