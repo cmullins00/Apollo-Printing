@@ -1,8 +1,7 @@
 import socket
 import sys
-from turtle import delay 
 import RPi.GPIO
-import time
+from time import sleep
 
 host = ""
 port = 5001
@@ -12,7 +11,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 gpio.setmode(gpio.BOARD)
 forward_pin = 10
-gpio.setup(forward_pin,gpio.OUT)
+gpio.setup(forward_pin, gpio.OUT)
 
 try:
 	sock.bind(host_addr)
@@ -33,8 +32,9 @@ msg = conn.recv(4).decode("utf-8")
 
 if msg == ":)":
 	gpio.output(forward_pin, gpio.HIGH)
-	delay(5000)
+	sleep(5.0)
 	gpio.output(forward_pin, gpio.LOW)
-	
 
 print(f"[{addr}] {msg}")
+
+gpio.cleanup()
