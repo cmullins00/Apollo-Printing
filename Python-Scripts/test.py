@@ -9,26 +9,27 @@ def main():
 
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-	while True:
-		try:
-			sock.bind(host_addr)
-			print("Socket bound")
-		except:
-			print("Bind failed")
-			sock.close()
-			sys.exit()
+	try:
+		sock.bind(host_addr)
+		print("Socket bound")
+	except:
+		print("Bind failed")
+		sock.close()
+		sys.exit()
 
+	while True:
 		sock.listen(1)
 		print(f"Listening on {host}:{port}")
 
 		try:
-			while True:
-				conn, addr = sock.accept()
-				print(f"Connected with {addr[0]}:{addr[1]}")
+			conn, addr = sock.accept()
+			print(f"Connected with {addr[0]}:{addr[1]}")
 
-				handle_client(conn)
+			handle_client(conn)
+			conn.close()
 		except KeyboardInterrupt:
 			print("\nServer shutting down...")
+			conn.close()
 			sock.close()
 			sys.exit()
 
@@ -44,15 +45,15 @@ def handle_client(conn):
 		off = "OFF"
 		end = "END"
 
+		msg = msg.strip()
+
 		if msg == on:
 			print("Turned compressor on")
 		elif msg == off:
 			print("Turned compressor off")
 		elif msg == end:
 			print("Ending the connection")
-			break
-
-	conn.close()
+			return
 
 if __name__ == "__main__":
 	main()
