@@ -8,12 +8,13 @@ def main():
 	host_addr = (host, port)
 
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	#sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 	try:
 		sock.bind(host_addr)
 		print("Socket bound")
 	except:
-		print("Bind failed")
+		print("Bind failed, ", socket.errori)
 		sock.close()
 		sys.exit()
 
@@ -32,12 +33,18 @@ def main():
 			conn.close()
 			sock.close()
 			sys.exit()
+		except socket.error as msg:
+			print("Socket error: %s" % msg)
 
 
 def handle_client(conn):
 	while(True):
 		print("Listening for message...")
-		msg = conn.recv(2048).decode("utf-8")
+		msg = conn.recv(4096).decode("utf-8")
+
+		if not msg:
+			print("Connection closed by client")
+			break
 
 		print("Message: ", msg)
 
