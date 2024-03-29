@@ -1,10 +1,15 @@
 import socket
 import sys
+import RPi.GPIO as GPIO
 
 def main():
     host = ""
     port = 5001
     host_addr = (host, port)
+
+    GPIO.setmode(GPIO.BOARD)
+    forward_pin = 10
+    GPIO.setup(forward_pin, GPIO.OUT)
 
     while True:  # Outer loop for server restart
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,6 +20,7 @@ def main():
         except Exception as e:
             print("Bind failed:", e)
             sock.close()
+            GPIO.cleanup()
             sys.exit()
 
         sock.listen(1)  # Listen for only one connection
@@ -31,6 +37,7 @@ def main():
             sys.exit()
         finally:
             sock.close()  # Close the socket after the client disconnects
+            GPIO.cleanup()
 
 def handle_client(conn):
     while True:
@@ -51,8 +58,10 @@ def handle_client(conn):
         msg = msg.strip()
 
         if msg == on:
+            GPIO.output(forward_pin, GPIO.HIGH)
             print("Turned compressor on")
         elif msg == off:
+            GPIO.output(forward_pin, GPIO.LOW)
             print("Turned compressor off")
         elif msg == end:
             print("Ending the connection")
