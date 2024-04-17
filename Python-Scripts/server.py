@@ -1,6 +1,8 @@
 import socket
 import sys
 import RPi.GPIO as GPIO
+import threading
+from time import sleep
 
 def main():
     host = ""
@@ -12,6 +14,9 @@ def main():
     #global stepper_pin
     global pump_direction
     global pump_pin
+    global motorStep
+
+    motorStep = False
 
     # GPIO Pin for the compressor
     compressor_pin = 10
@@ -63,6 +68,7 @@ def main():
             sock.close()
             sys.exit()
         finally:
+            threading._shutdown()
             sock.close()  # Close the socket after the client disconnects
 
 def handle_client(conn):
@@ -90,10 +96,14 @@ def handle_client(conn):
 
         if msg == pumpOn:
             print("Turned pump on")
-            GPIO.output(pump_pin, GPIO.HIGH)
+            motorStep = True
+            test_thread = threading.Thread(target = step(), args=(pump_pin, 0.1), daemon=True)
+            test_thread.start()
         elif msg == pumpOff:
             print("Turned pump off")
-            GPIO.output(pump_pin, GPIO.LOW)
+            #test_thread.join() 
+            motorStep = False
+            sleep(0.5)
         elif msg == compressorOn:
             print("Turned compressor on")
             #GPIO.output(forward_pin, GPIO.HIGH)
@@ -109,6 +119,16 @@ def handle_client(conn):
         elif msg == end:
             print("Ending the connection")
             break
+
+def step(pin, delay):
+    delay = delay/2
+    while motorStep:
+        GPIO.output(pin, GPIO.HIGH)
+        sleep(delay)
+
+        GPIO.output(pin, GPIO.LOW)
+        sleep(delay)
+    return
 
 if __name__ == "__main__":
     main()
