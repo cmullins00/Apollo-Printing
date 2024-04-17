@@ -69,6 +69,7 @@ def main():
             sys.exit()
         finally:
             threading._shutdown()
+            GPIO.cleanup()
             sock.close()  # Close the socket after the client disconnects
 
 def handle_client(conn):
