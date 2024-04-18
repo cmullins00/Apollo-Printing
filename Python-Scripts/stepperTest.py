@@ -43,5 +43,5 @@ class StepperHandler():
 			sleep(self.Delay)
 		
 
-x = StepperHandler(6,12)
+x = StepperHandler(6,12) #Board Pin 31 (MAIN) and 32 (DIRECTION)
 x.Step(10000)

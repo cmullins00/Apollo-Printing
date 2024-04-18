@@ -35,9 +35,6 @@ def main():
     GPIO.setup(pump_direction, GPIO.OUT)
     GPIO.setup(pump_pin, GPIO.OUT)
 
-    # Set direction to clockwise
-    GPIO.output(pump_direction, GPIO.HIGH)
-
     while True:  # Outer loop for server restart
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -73,6 +70,8 @@ def main():
             sock.close()  # Close the socket after the client disconnects
 
 def handle_client(conn):
+    global motorStep
+
     while True:
         print("Listening for message...")
         msg = conn.recv(2048).decode("utf-8")
@@ -98,11 +97,11 @@ def handle_client(conn):
         if msg == pumpOn:
             print("Turned pump on")
             motorStep = True
-            test_thread = threading.Thread(target = step, args=(pump_pin, 0.1), daemon=True)
+            test_thread = threading.Thread(target = step, args=(pump_pin, 0.1))
             test_thread.start()
         elif msg == pumpOff:
             print("Turned pump off")
-            #test_thread.join() 
+            test_thread.join() 
             motorStep = False
             sleep(0.5)
         elif msg == compressorOn:
@@ -122,6 +121,10 @@ def handle_client(conn):
             break
 
 def step(pin, delay):
+    global motorStep
+    global pump_direction
+    GPIO.output(pin, pump_direction)
+
     delay = delay/2
     while motorStep:
         GPIO.output(pin, GPIO.HIGH)
