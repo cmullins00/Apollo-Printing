@@ -101,8 +101,8 @@ def handle_client(conn):
             test_thread.start()
         elif msg == pumpOff:
             print("Turned pump off")
-            test_thread.join() 
             motorStep = False
+            test_thread.join() 
             sleep(0.5)
         elif msg == compressorOn:
             print("Turned compressor on")
