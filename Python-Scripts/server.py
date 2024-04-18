@@ -97,7 +97,7 @@ def handle_client(conn):
         if msg == pumpOn:
             print("Turned pump on")
             motorStep = True
-            test_thread = threading.Thread(target = step, args=(pump_pin, 0.03))
+            test_thread = threading.Thread(target = step, args=(pump_pin, 0.03), daemon=True)
             test_thread.start()
         elif msg == pumpOff:
             print("Turned pump off")
