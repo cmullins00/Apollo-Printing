@@ -90,7 +90,7 @@ def handle_client(conn):
         compressorOff = "compressorOff" # Turn off the compressor
         pumpOn = "pumpOn"               # Turn on the peristaltic pump
         pumpOff = "pumpOff"             # Turn off the peristaltic pump
-        end = "END"
+        end = "END"                     # End the socket connection
 
         msg = msg.strip()
 

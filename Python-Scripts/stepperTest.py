@@ -7,7 +7,7 @@ class StepperHandler():
 	__CLOCKWISE = 1
 	__ANTI_CLOCKWISE = 0
 
-	def __init__(self,stepPin,directionPin,delay=0.5, stepsPerRevolution=400):
+	def __init__(self,stepPin,directionPin,delay=0.015, stepsPerRevolution=400):
 
 		#Configure instance
 		self.CLOCKWISE = self.__CLOCKWISE
