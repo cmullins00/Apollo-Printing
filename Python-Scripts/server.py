@@ -44,8 +44,9 @@ def main():
             print("Socket bound")
         except Exception as e:
             print("Bind failed:", e)
-            sock.close()
             GPIO.cleanup()
+            conn.close()
+            sock.close()
             sys.exit()
 
         sock.listen(1)  # Listen for only one connection
@@ -53,20 +54,14 @@ def main():
         try:  # Attempt to handle all requests of the client
             conn, addr = sock.accept()
             print(f"Connected with {addr[0]}:{addr[1]}")
-
             handle_client(conn)
-            conn.close()
         except KeyboardInterrupt:
             print("\nServer shutting down...")
-            sock.close()
-            sys.exit()
         except Exception as e:
             print("Error: ", e)
-            sock.close()
-            sys.exit()
         finally:
-            threading._shutdown()
             GPIO.cleanup()
+            conn.close()
             sock.close()  # Close the socket after the client disconnects
 
 def handle_client(conn):
@@ -97,12 +92,13 @@ def handle_client(conn):
         if msg == pumpOn:
             print("Turned pump on")
             motorStep = True
-            test_thread = threading.Thread(target = step, args=(pump_pin, 0.03), daemon=True)
+            test_thread = threading.Thread(target = step, args=(pump_pin, 0.03))
             test_thread.start()
         elif msg == pumpOff:
             print("Turned pump off")
             motorStep = False
-            test_thread.join() 
+            if test_thread is not None:
+                test_thread.join()
             sleep(0.5)
         elif msg == compressorOn:
             print("Turned compressor on")
