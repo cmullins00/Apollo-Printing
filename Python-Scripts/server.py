@@ -10,13 +10,13 @@ def main():
     host_addr = (host, port)
 
     GPIO.setmode(GPIO.BOARD)
+
+    # Create the global pin variables
     global compressor_pin
     #global stepper_pin
+    #global step_direction
     global pump_direction
     global pump_pin
-    global motorStep
-
-    motorStep = False
 
     # GPIO Pin for the compressor
     compressor_pin = 10
@@ -29,9 +29,15 @@ def main():
     pump_pin = 36
     pump_direction = 40
 
+
+    # Flag variable for stopping the threads
+    global motorStep
+    motorStep = False
+
     # Set up the pins on the board
     GPIO.setup(compressor_pin, GPIO.OUT)
     #GPIO.setup(stepper_pin, GPIO.OUT)
+    #GPIO.setup(step_direction, GPIO.OUT)
     GPIO.setup(pump_direction, GPIO.OUT)
     GPIO.setup(pump_pin, GPIO.OUT)
 
@@ -88,11 +94,11 @@ def handle_client(conn):
         end = "END"                     # End the socket connection
 
         msg = msg.strip()
+        test_thread = threading.Thread(target = step, args=(pump_pin, 0.03))
 
         if msg == pumpOn:
             print("Turned pump on")
             motorStep = True
-            test_thread = threading.Thread(target = step, args=(pump_pin, 0.03))
             test_thread.start()
         elif msg == pumpOff:
             print("Turned pump off")
@@ -102,10 +108,10 @@ def handle_client(conn):
             sleep(0.5)
         elif msg == compressorOn:
             print("Turned compressor on")
-            #GPIO.output(forward_pin, GPIO.HIGH)
+            GPIO.output(compressor_pin, GPIO.HIGH)
         elif msg == compressorOff:
             print("Turned compressor off")
-            #GPIO.output(forward_pin, GPIO.LOW)
+            GPIO.output(compressor_pin, GPIO.LOW)
         elif msg == stepOn:
             print("Turned stepper motor on")
             #GPIO.output(pump_pin, GPIO.HIGH)
