@@ -78,7 +78,7 @@ def handle_client(conn):
 
     while True:
         print("Listening for message...")
-        msg = conn.recv(2048).decode("utf-8")   #listen for incoming instructions from the robot controller
+        msg = conn.recv(2048).decode("utf-8")   # Listen for incoming instructions from the robot controller
 
         if not msg:
             # Connection closed by client
@@ -98,7 +98,7 @@ def handle_client(conn):
 
         msg = msg.strip()
 
-        #initialize threads to run the pump and stepper while still being able to listen to new messages from the controller
+        # Initialize threads to run the pump and stepper while still being able to listen to new messages from the controller
         pump_thread = threading.Thread(target = pumpStep, args=(pump_pin, 0.03))
         stepper_thread = threading.Thread(target = stepperStep, args=(stepper_pin, 0.03))
 
@@ -134,7 +134,7 @@ def handle_client(conn):
             print("Ending the connection")
             break
 
-#function to run the pump continuously until stopped
+# Function to run the pump continuously until stopped
 def pumpStep(pin, delay):
     global pumpStart
     global pump_direction
@@ -149,7 +149,7 @@ def pumpStep(pin, delay):
         sleep(delay)
     return
 
-#function to run the stepper motor continuously until stopped
+# Function to run the stepper motor continuously until stopped
 def stepperStep(pin, delay):
     global stepperStart
     global step_direction
