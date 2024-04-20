@@ -109,8 +109,9 @@ def handle_client(conn):
         elif msg == pumpOff:
             print("Turned pump off")
             pumpStart = False
-            if pump_thread is not None:
-                pump_thread.join()
+            #if pump_thread is not None:
+                #pump_thread.join()
+            GPIO.output(pump_pin, GPIO.LOW)
             sleep(0.5)
         elif msg == compressorOn:
             print("Turned compressor on")
@@ -125,8 +126,9 @@ def handle_client(conn):
         elif msg == stepOff:
             print("Turned stepper motor off")
             stepperStart = False
-            if stepper_thread is not None:
-                stepper_thread.join()
+            #if stepper_thread is not None:
+                #stepper_thread.join()
+            GPIO.output(stepper_pin, GPIO.LOW)
             sleep(0.5)
         elif msg == end:
             print("Ending the connection")
