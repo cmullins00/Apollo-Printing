@@ -100,7 +100,7 @@ def handle_client(conn):
 
         # Initialize threads to run the pump and stepper while still being able to listen to new messages from the controller
         pump_thread = threading.Thread(target = pumpStep, args=(pump_pin, 0.03))
-        stepper_thread = threading.Thread(target = stepperStep, args=(stepper_pin, 0.03))
+        stepper_thread = threading.Thread(target = stepperStep, args=(stepper_pin, 2.0))
 
         if msg == pumpOn:
             print("Turned pump on")
