@@ -13,8 +13,8 @@ def main():
 
     # Create the global pin variables
     global compressor_pin
-    #global stepper_pin
-    #global step_direction
+    global stepper_pin
+    global step_direction
     global pump_direction
     global pump_pin
 
@@ -22,60 +22,63 @@ def main():
     compressor_pin = 10
 
     # GPIO Pins for the stepper motor
-    #stepper_pin = 16
-    #step_direction = 21
+    stepper_pin = 16
+    step_direction = 21
     
-    # GPIO Pin for the pump
+    # GPIO Pins for the pump
     pump_pin = 36
     pump_direction = 40
 
 
-    # Flag variable for stopping the threads
-    global motorStep
-    motorStep = False
+    # Flag variables for stopping the threads
+    global pumpStart
+    global stepperStart
+    pumpStart = False
+    stepperStart = False
 
     # Set up the pins on the board
     GPIO.setup(compressor_pin, GPIO.OUT)
-    #GPIO.setup(stepper_pin, GPIO.OUT)
-    #GPIO.setup(step_direction, GPIO.OUT)
+    GPIO.setup(stepper_pin, GPIO.OUT)
+    GPIO.setup(step_direction, GPIO.OUT)
     GPIO.setup(pump_direction, GPIO.OUT)
     GPIO.setup(pump_pin, GPIO.OUT)
 
-    while True:  # Outer loop for server restart
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        try:  # Try to bind the host address
-            sock.bind(host_addr)
-            print("Socket bound")
-        except Exception as e:
-            print("Bind failed:", e)
-            GPIO.cleanup()
-            conn.close()
-            sock.close()
-            sys.exit()
+    try:  # Try to bind the host address
+        sock.bind(host_addr)
+        print("Socket bound")
+    except Exception as e:
+        print("Bind failed:", e)
+        GPIO.cleanup()
+        conn.close()
+        sock.close()
+        sys.exit()
 
-        sock.listen(1)  # Listen for only one connection
-
-        try:  # Attempt to handle all requests of the client
-            conn, addr = sock.accept()
-            print(f"Connected with {addr[0]}:{addr[1]}")
-            handle_client(conn)
-        except KeyboardInterrupt:
-            print("\nServer shutting down...")
-        except Exception as e:
-            print("Error: ", e)
-        finally:
-            GPIO.cleanup()
-            conn.close()
-            sock.close()  # Close the socket after the client disconnects
+    sock.listen(1)  # Listen for only one connection
+    
+    try:  # Attempt to handle all requests of the client
+        conn, addr = sock.accept()
+        print(f"Connected with {addr[0]}:{addr[1]}")
+        handle_client(conn)
+    except KeyboardInterrupt:
+        print("\nServer shutting down...")
+    except Exception as e:
+        print("Error: ", e)
+    finally:
+        GPIO.cleanup()
+        conn.close()
+        sock.close()  # Close the socket after the client disconnects
+        sys.exit()
 
 def handle_client(conn):
-    global motorStep
+    global pumpStart
+    global stepperStart
 
     while True:
         print("Listening for message...")
-        msg = conn.recv(2048).decode("utf-8")
+        msg = conn.recv(2048).decode("utf-8")   #listen for incoming instructions from the robot controller
 
         if not msg:
             # Connection closed by client
@@ -94,17 +97,20 @@ def handle_client(conn):
         end = "END"                     # End the socket connection
 
         msg = msg.strip()
-        test_thread = threading.Thread(target = step, args=(pump_pin, 0.03))
+
+        #initialize threads to run the pump and stepper while still being able to listen to new messages from the controller
+        pump_thread = threading.Thread(target = pumpStep, args=(pump_pin, 0.03))
+        stepper_thread = threading.Thread(target = stepperStep, args=(stepper_pin, 0.03))
 
         if msg == pumpOn:
             print("Turned pump on")
-            motorStep = True
-            test_thread.start()
+            pumpStart = True
+            pump_thread.start()
         elif msg == pumpOff:
             print("Turned pump off")
-            motorStep = False
-            if test_thread is not None:
-                test_thread.join()
+            pumpStart = False
+            if pump_thread is not None:
+                pump_thread.join()
             sleep(0.5)
         elif msg == compressorOn:
             print("Turned compressor on")
@@ -114,21 +120,41 @@ def handle_client(conn):
             GPIO.output(compressor_pin, GPIO.LOW)
         elif msg == stepOn:
             print("Turned stepper motor on")
-            #GPIO.output(pump_pin, GPIO.HIGH)
+            stepperStart = True
+            stepper_thread.start()
         elif msg == stepOff:
             print("Turned stepper motor off")
-            GPIO.output(pump_pin, GPIO.LOW)
+            stepperStart = False
+            if stepper_thread is not None:
+                stepper_thread.join()
+            sleep(0.5)
         elif msg == end:
             print("Ending the connection")
             break
 
-def step(pin, delay):
-    global motorStep
+#function to run the pump continuously until stopped
+def pumpStep(pin, delay):
+    global pumpStart
     global pump_direction
     GPIO.output(pin, pump_direction)
 
     delay = delay/2
-    while motorStep:
+    while pumpStart:
+        GPIO.output(pin, GPIO.HIGH)
+        sleep(delay)
+
+        GPIO.output(pin, GPIO.LOW)
+        sleep(delay)
+    return
+
+#function to run the stepper motor continuously until stopped
+def stepperStep(pin, delay):
+    global stepperStart
+    global step_direction
+    GPIO.output(pin, step_direction)
+
+    delay = delay/2
+    while stepperStart:
         GPIO.output(pin, GPIO.HIGH)
         sleep(delay)
 
