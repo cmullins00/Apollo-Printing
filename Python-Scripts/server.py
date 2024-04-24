@@ -90,6 +90,7 @@ def handle_client(conn):
         # Messages to be received
         stepOn = "stepOn"               # Turn on the stepper motor
         stepOff = "stepOff"             # Turn off the stepper motor
+        stepReverse = "stepReverse"
         compressorOn = "compressorOn"   # Turn on the compressor
         compressorOff = "compressorOff" # Turn off the compressor
         pumpOn = "pumpOn"               # Turn on the peristaltic pump
@@ -100,7 +101,7 @@ def handle_client(conn):
 
         # Initialize threads to run the pump and stepper while still being able to listen to new messages from the controller
         pump_thread = threading.Thread(target = pumpStep, args=(pump_pin, 0.03))
-        stepper_thread = threading.Thread(target = stepperStep, args=(stepper_pin, 2.0))
+        stepper_thread = threading.Thread(target = stepperStep, args=(stepper_pin, 0.05))
 
         if msg == pumpOn:
             print("Turned pump on")
@@ -121,8 +122,10 @@ def handle_client(conn):
             GPIO.output(compressor_pin, GPIO.LOW)
         elif msg == stepOn:
             print("Turned stepper motor on")
-            stepperStart = True
-            stepper_thread.start()
+            stepperStep(stepper_pin, 0.05)
+        elif msg == stepReverse:
+            print("Reversed the direction of the stepper")
+            stepperReverse(stepper_pin, 0.05)
         elif msg == stepOff:
             print("Turned stepper motor off")
             stepperStart = False
@@ -149,6 +152,22 @@ def pumpStep(pin, delay):
         sleep(delay)
     return
 
+def stepperStep(pin, delay):
+    global step_direction
+    delay = delay/2
+    steps = 150
+    GPIO.output(step_direction, GPIO.LOW)
+    GPIO.output(pin, step_direction)
+    
+    for x in range(steps):
+        GPIO.output(pin, GPIO.HIGH)
+        sleep(delay)
+
+        GPIO.output(pin, GPIO.LOW)
+        sleep(delay)
+    
+
+'''
 # Function to run the stepper motor continuously until stopped
 def stepperStep(pin, delay):
     global stepperStart
@@ -163,6 +182,23 @@ def stepperStep(pin, delay):
         GPIO.output(pin, GPIO.LOW)
         sleep(delay)
     return
+'''
 
+def stepperReverse(pin, delay):
+    global step_direction
+    delay = delay/2
+    steps = 100
+    GPIO.output(step_direction, GPIO.HIGH)
+    GPIO.output(pin, step_direction)
+    
+    for x in range(steps):
+        GPIO.output(pin, GPIO.HIGH)
+        sleep(delay)
+
+        GPIO.output(pin, GPIO.LOW)
+        sleep(delay)
+    
+    GPIO.output(step_direction, GPIO.LOW)
+    
 if __name__ == "__main__":
     main()
