@@ -159,7 +159,7 @@ def pumpStep(pin, delay):
 def stepperStep(pin, delay):
     global step_direction
     delay = delay/2
-    steps = 150
+    steps = 100
     GPIO.output(step_direction, GPIO.HIGH)
     GPIO.output(pin, step_direction)
     
@@ -191,7 +191,7 @@ def stepperStep(pin, delay):
 def stepperReverse(pin, delay):
     global step_direction
     delay = delay/2
-    steps = 100
+    steps = 50
     GPIO.output(step_direction, GPIO.LOW)
     GPIO.output(pin, step_direction)
     
