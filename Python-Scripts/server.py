@@ -122,10 +122,10 @@ def handle_client(conn):
             GPIO.output(compressor_pin, GPIO.LOW)
         elif msg == stepOn:
             print("Turned stepper motor on")
-            stepperStep(stepper_pin, 0.05)
+            stepperStep(stepper_pin, 0.02)
         elif msg == stepReverse:
             print("Reversed the direction of the stepper")
-            stepperReverse(stepper_pin, 0.05)
+            stepperReverse(stepper_pin, 0.02)
         elif msg == stepOff:
             print("Turned stepper motor off")
             stepperStart = False
@@ -156,7 +156,7 @@ def stepperStep(pin, delay):
     global step_direction
     delay = delay/2
     steps = 150
-    GPIO.output(step_direction, GPIO.LOW)
+    GPIO.output(step_direction, GPIO.HIGH)
     GPIO.output(pin, step_direction)
     
     for x in range(steps):
@@ -188,7 +188,7 @@ def stepperReverse(pin, delay):
     global step_direction
     delay = delay/2
     steps = 100
-    GPIO.output(step_direction, GPIO.HIGH)
+    GPIO.output(step_direction, GPIO.LOW)
     GPIO.output(pin, step_direction)
     
     for x in range(steps):
