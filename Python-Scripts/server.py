@@ -43,6 +43,10 @@ def main():
     GPIO.setup(pump_direction, GPIO.OUT)
     GPIO.setup(pump_pin, GPIO.OUT)
 
+    GPIO.output(pump_pin, GPIO.LOW)
+    GPIO.output(stepper_pin, GPIO.LOW)
+
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
