@@ -56,7 +56,6 @@ def main():
     except Exception as e:
         print("Bind failed:", e)
         GPIO.cleanup()
-        conn.close()
         sock.close()
         sys.exit()
 
@@ -105,7 +104,6 @@ def handle_client(conn):
 
         # Initialize threads to run the pump and stepper while still being able to listen to new messages from the controller
         pump_thread = threading.Thread(target = pumpStep, args=(pump_pin, 0.03))
-        stepper_thread = threading.Thread(target = stepperStep, args=(stepper_pin, 0.05))
 
         if msg == pumpOn:
             print("Turned pump on")
@@ -114,8 +112,6 @@ def handle_client(conn):
         elif msg == pumpOff:
             print("Turned pump off")
             pumpStart = False
-            #if pump_thread is not None:
-                #pump_thread.join()
             GPIO.output(pump_pin, GPIO.LOW)
             sleep(0.5)
         elif msg == compressorOn:
@@ -133,8 +129,6 @@ def handle_client(conn):
         elif msg == stepOff:
             print("Turned stepper motor off")
             stepperStart = False
-            #if stepper_thread is not None:
-                #stepper_thread.join()
             GPIO.output(stepper_pin, GPIO.LOW)
             sleep(0.5)
         elif msg == end:
@@ -170,6 +164,29 @@ def stepperStep(pin, delay):
         GPIO.output(pin, GPIO.LOW)
         sleep(delay)
     
+'''
+# This function can replace stepperStep and stepperReverse
+# 'forward' is just a bool that decides if it is going clockwise or counterclockwise
+def stepperStep(pin, delay, forward):
+    global step_direction
+    delay = delay/2
+
+    if forward: # Clockwise
+        steps = 100
+        GPIO.output(step_direction, GPIO.HIGH)
+        GPIO.output(pin, step_direction)
+    else: # Counter Clockwise
+        setps = 50
+        GPIO.output(step_direction, GPIO.HIGH)
+        GPIO.output(pin,step_direction)
+        
+    for x in range(steps):
+        GPIO.output(pin, GPIO.HIGH)
+        sleep(delay)
+
+        GPIO.output(pin, GPIO.LOW)
+        sleep(delay)
+'''
 
 '''
 # Function to run the stepper motor continuously until stopped
