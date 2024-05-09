@@ -8,5 +8,5 @@ try:
 	sleep(5.0)
 	GPIO.output(24, 0)
 	sleep(0.5)
-except:
+finally:
 	GPIO.cleanup()

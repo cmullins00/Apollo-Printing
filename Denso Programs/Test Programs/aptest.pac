@@ -1,0 +1,11 @@
+'!TITLE "<Title>"
+PROGRAM APTest
+TAKEARM 0 keep=0
+SPEED 25
+
+MOVE P, @0 p33
+
+MOVE P, @0 p34
+
+GIVEARM
+END

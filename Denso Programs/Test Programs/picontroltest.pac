@@ -1,0 +1,87 @@
+'!TITLE "piControlTest"
+PROGRAM piControlTest
+TAKEARM 0 keep=0
+ 
+com_discom #9
+DEFINT flg 
+ 
+com_state #9,flg 
+IF flg=-1 THEN 
+    com_encom #9 
+    DELAY 1000 
+ENDIF 
+ 
+FLUSH #9 
+S10 = "ON" 
+S11 = "OFF" 
+S12 = "END" 
+ 
+PRINT #9, S10
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S10 
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S10 
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S10 
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S12
+DELAY 1000 
+ 
+ 
+com_discom #9
+ 
+com_state #9,flg 
+IF flg=-1 THEN 
+    com_encom #9 
+    DELAY 1000 
+ENDIF 
+FLUSH #9 
+ 
+ 
+PRINT #9, S10 
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S10 
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S10 
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S10 
+DELAY 1000 
+ 
+PRINT #9, S11 
+DELAY 1000 
+ 
+PRINT #9, S12
+DELAY 1000 
+ 
+com_discom #9
+ 
+GIVEARM 
+END

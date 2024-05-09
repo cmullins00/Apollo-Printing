@@ -1,0 +1,30 @@
+SM:project.map:'link map'
+MV:2.8:'compiler version'
+TC:0:'Trace Code'
+SA:'allocation map'
+LM:1:ap_movement_test.ric:0000:1000-1039:'link module'
+ #  0: 007f, 1, 1000, AP_MOVEMENT_TEST
+LM:2:cell_grab_test2.ric:003a:103a-1074:'link module'
+ #  1: 0002, 1, 1074, CELL_GRAB_TEST+FLG,     0,     0,     0
+ #  2: 007f, 1, 103a, CELL_GRAB_TEST
+LM:3:inkpumptest.ric:0075:1075-10af:'link module'
+ #  3: 0002, 1, 10af, INKPUMPTEST+FLG,     0,     0,     0
+ #  4: 007f, 1, 1075, INKPUMPTEST
+LM:4:picontroltest.ric:00b0:10b0-10ea:'link module'
+ #  5: 0002, 1, 10ea, PICONTROLTEST+FLG,     0,     0,     0
+ #  6: 007f, 1, 10b0, PICONTROLTEST
+LM:5:multitest.ric:00eb:10eb-1125:'link module'
+ #  7: 0002, 1, 1125, MULTITEST+FLG,     0,     0,     0
+ #  8: 007f, 1, 10eb, MULTITEST
+LM:6:steppermotortest.ric:0126:1126-1160:'link module'
+ #  9: 0002, 1, 1160, STEPPERMOTORTEST+FLG,     0,     0,     0
+ # 10: 007f, 1, 1126, STEPPERMOTORTEST
+LM:7:main.ric:0161:1161-119b:'link module'
+ # 11: 0002, 1, 119b, MAIN+FLG,     0,     0,     0
+ # 12: 007f, 1, 1161, MAIN
+LM:8:inkplacementtest.ric:019c:119c-11d6:'link module'
+ # 13: 0002, 1, 11d6, INKPLACEMENTTEST+FLG,     0,     0,     0
+ # 14: 007f, 1, 119c, INKPLACEMENTTEST
+FA:01d0:'free allocation'
+EA:'end of allocation map'
+EM:'end of link map'

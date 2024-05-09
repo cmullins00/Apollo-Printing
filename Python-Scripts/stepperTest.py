@@ -30,10 +30,10 @@ class StepperHandler():
 		print("Step pin: " +str(self.StepPin) + " Direction Pin: " + str(self.DirectionPin) + " Delay: " + str(self.Delay))
 		print("Taking " + str(stepsToTake) + " steps.")
 
-		#set the direction
+		# Set the direction
 		GPIO.output(self.DirectionPin, direction)
 
-		#take number of requested steps
+		# Take number of requested steps
 		for x in range(stepsToTake):
 			print("Step " + str(x))
 			GPIO.output(self.StepPin, GPIO.HIGH)
@@ -43,5 +43,5 @@ class StepperHandler():
 			sleep(self.Delay)
 		
 
-x = StepperHandler(6,12) #Board Pin 31 (MAIN) and 32 (DIRECTION)
+x = StepperHandler(6,12) # Board Pin 31 (MOTOR) and 32 (DIRECTION)
 x.Step(10000)

@@ -1,0 +1,13 @@
+'!TITLE "<Title>"
+PROGRAM ap_movement_test
+TAKEARM 0 keep=0
+SPEED 50
+
+MOVE P, @E J1, J84, J1
+DELAY 1000
+
+MOVE P, J84, J1, J84
+DELAY 1000
+
+GIVEARM
+END
