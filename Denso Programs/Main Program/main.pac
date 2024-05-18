@@ -67,6 +67,7 @@ DELAY 7000
 MOVE L, @0 J53
 PRINT #9,S11
 
+' Change speed in-between moves to save time
 SPEED 30
 ' In-between
 MOVE P, @0 J49
@@ -224,7 +225,7 @@ MOVE P, @0 J11 ' In-between
 
 MOVE P, @0 J1 ' Place glue #1
 PRINT #9, S14 ' Press the glue stick
-DELAY 17500
+DELAY 17500   ' The first press required more time to allow the glue to melt
 PRINT #9, S15 ' Retract glue stick
 DELAY 1000
 
@@ -236,9 +237,7 @@ DELAY 12500
 PRINT #9, S15
 DELAY 1000
 
-MOVE P, @0 J11 ' In-between
-
-MOVE P, @0 J12 ' In-between
+MOVE P, @0 J11, J12 ' In-between
 
 MOVE P, @0 J3 ' Place glue #3
 PRINT #9, S14
@@ -255,7 +254,6 @@ PRINT #9, S15
 DELAY 1000
 
 MOVE P, @0 J12, J13 ' In-between
-'MOVE P, @0 J13 ' In-between
 
 MOVE P, @0 J5 ' Place glue #5
 PRINT #9, S14
@@ -272,7 +270,6 @@ PRINT #9, S15
 DELAY 1000
 
 MOVE P, @0 J13, J14 ' In-betweens
-'MOVE P, @0 J14 ' In-between
 
 MOVE P, @0 J7 ' Place glue #7
 PRINT #9, S14
@@ -374,6 +371,8 @@ DELAY 2000
 ' Move to the home position
 MOVE P, @0 J0
 
+' From here, the entire process repeats.
+' We were unable to get functions or loops to work in Wincaps, so this our the alternative.
 ' * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ' PLACING THE SUBSTRATE
 
@@ -569,7 +568,7 @@ MOVE P, @0 J11 ' In-between
 
 MOVE P, @0 J1 ' Place glue #1
 PRINT #9, S14 ' Press the glue stick
-DELAY 17500
+DELAY 17500   ' The first press required more time to allow the glue to melt
 PRINT #9, S15 ' Retract glue stick
 DELAY 1000
 
@@ -581,9 +580,7 @@ DELAY 12500
 PRINT #9, S15
 DELAY 1000
 
-MOVE P, @0 J11 ' In-between
-
-MOVE P, @0 J12 ' In-between
+MOVE P, @0 J11, J12 ' In-between
 
 MOVE P, @0 J3 ' Place glue #3
 PRINT #9, S14
@@ -600,7 +597,6 @@ PRINT #9, S15
 DELAY 1000
 
 MOVE P, @0 J12, J13 ' In-between
-'MOVE P, @0 J13 ' In-between
 
 MOVE P, @0 J5 ' Place glue #5
 PRINT #9, S14
@@ -617,7 +613,6 @@ PRINT #9, S15
 DELAY 500
 
 MOVE P, @0 J13, J14 ' In-betweens
-'MOVE P, @0 J14 ' In-between
 
 MOVE P, @0 J7 ' Place glue #7
 PRINT #9, S14

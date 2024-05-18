@@ -46,7 +46,7 @@ def main():
     GPIO.output(pump_pin, GPIO.LOW)
     GPIO.output(stepper_pin, GPIO.LOW)
 
-
+    # Set up the socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
@@ -105,6 +105,7 @@ def handle_client(conn):
         # Initialize threads to run the pump and stepper while still being able to listen to new messages from the controller
         pump_thread = threading.Thread(target = pumpStep, args=(pump_pin, 0.03))
 
+	# Try to match the message, may be better implemented as a switch statement
         if msg == pumpOn:
             print("Turned pump on")
             pumpStart = True
@@ -165,7 +166,7 @@ def stepperStep(pin, delay):
         sleep(delay)
     
 '''
-# This function can replace stepperStep and stepperReverse
+# This function should replace stepperStep and stepperReverse -Conner
 # 'forward' is just a bool that decides if it is going clockwise or counterclockwise
 def stepperStep(pin, delay, forward):
     global step_direction
